@@ -1,9 +1,47 @@
 import click
+import controller
+import logging
 
-@click.command()
-def hello():
-    click.echo('Hello World!')
+@click.group()
+def cli():
+    pass
+
+@cli.command("add")
+@click.argument('files', type=str, nargs=-1)
+def add(files):
+    try:
+        controller.push(files)
+    except Exception as e:
+        logging.error(e, exc_info=True)
+
+@cli.command("ls")
+def ls():
+    try:
+        click.secho(*controller.listfiles(), fg="green", bold=True)
+    except Exception as e:
+        logging.error(e, exc_info=True)
+    
+
+@cli.command("rm")
+@click.argument('filename', type=str)
+def rm(filename):
+    try:
+        controller.remove_file(filename)
+    except Exception as e:
+        logging.error(e, exc_info=True)
+
+@cli.command("update")
+def update():
+    click.echo("update")
+
+@cli.command("wc")
+def wc():
+    click.echo("wc")
+
+@cli.command("freq-words")
+def freq_words():
+    click.echo("freq-words")
 
 
 if __name__ == '__main__':
-    hello()
+    cli()
