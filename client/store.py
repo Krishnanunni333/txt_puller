@@ -31,12 +31,16 @@ def rm(filename):
         logging.error(e, exc_info=True)
 
 @cli.command("update")
-def update():
-    click.echo("update")
+@click.argument('filename', type=str)
+def update(filename):
+    try:
+        controller.update_file(filename)
+    except Exception as e:
+        logging.error(e, exc_info=True)
 
 @cli.command("wc")
 def wc():
-    click.echo("wc")
+    controller.count_total_words()
 
 @cli.command("freq-words")
 def freq_words():
