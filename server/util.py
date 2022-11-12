@@ -5,12 +5,13 @@ import json
 import os
 import logging
 import threading
-import queue
+import constant
+
 
 def copyfile(existingfile, newfile):
     print(existingfile, newfile)
-    dest_1 = shutil.copyfile("./alltxtfiles/" + existingfile, "./alltxtfiles/" + newfile)
-    dest_2 = shutil.copyfile("./filemetadata/" + existingfile + ".json", "./filemetadata/" + newfile + ".json")
+    dest_1 = shutil.copyfile(constant.TXT_PATH + existingfile, constant.TXT_PATH + newfile)
+    dest_2 = shutil.copyfile(constant.META_PATH + existingfile + ".json", constant.META_PATH + newfile + ".json")
 
 def return_md5(filename):
         md5Command = "md5sum {}".format(filename)
@@ -22,7 +23,7 @@ def return_md5(filename):
 
 def get_md5_files():
     all_md5s = {}
-    all_txt_files = glob.glob('./alltxtfiles/*.txt')
+    all_txt_files = glob.glob(constant.TXT_PATH + '*.txt')
 
     for filename in all_txt_files:
         output = return_md5(filename)
@@ -39,9 +40,9 @@ def process_json_payload(payload):
         content = payload["content"]
         count = payload["count"]
         finished = payload["finished"]
-        with open("./alltxtfiles/" + filename, 'a+') as file:
+        with open(constant.TXT_PATH + filename, 'a+') as file:
             file.write(content)
-        md5 = return_md5("./alltxtfiles/" + filename).decode("utf-8").split()[0].strip()    
+        md5 = return_md5(constant.TXT_PATH + filename).decode("utf-8").split()[0].strip()    
         dictionary ={
                 "filename" : filename,
                 "md5" :  md5,
@@ -49,7 +50,7 @@ def process_json_payload(payload):
                 "finished" : finished
             }
 
-        with open("filemetadata/{}.json".format(filename), 'w') as metafile:
+        with open(constant.META_PATH + "/{}.json".format(filename), 'w') as metafile:
                 json.dump(dictionary, metafile)
     except Exception as e:
         logging.error(e, exc_info=True)
@@ -61,7 +62,7 @@ def getalltxtfiles():
     '''Function to return all txt files in the directory'''
     try:
         alltxtfiles = []
-        for x in os.listdir("./alltxtfiles/"):
+        for x in os.listdir(constant.TXT_PATH):
             if x.endswith(".txt"):
                 alltxtfiles.append(x)
         return alltxtfiles
@@ -72,8 +73,8 @@ def deletefile(filename):
     try:
         if filename not in getalltxtfiles():
             return False
-        os.remove("./alltxtfiles/" + filename)
-        os.remove("./filemetadata/" + filename + ".json")
+        os.remove(constant.TXT_PATH + filename)
+        os.remove(constant.META_PATH + filename + ".json")
         return True 
     except Exception as e:
         logging.error(e, exc_info=True)
@@ -95,9 +96,9 @@ def getnumwords():
     try:
         threads = []
         total_words = []
-        for x in os.listdir("./alltxtfiles/"):
+        for x in os.listdir(constant.TXT_PATH):
             if x.endswith(".txt"):
-                thread = threading.Thread(target=getwordusingwc, args=("./alltxtfiles/" + x, total_words))
+                thread = threading.Thread(target=getwordusingwc, args=(constant.TXT_PATH + x, total_words))
 
                 threads.append(thread)
 
