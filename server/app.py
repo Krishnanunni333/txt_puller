@@ -54,3 +54,14 @@ def deletetxtfile():
         return "No file named {}".format(file_to_be_deleted), 400
     except Exception as e:
         logging.error(e, exc_info=True)
+
+
+@app.route('/wordcount', methods=['GET'])
+def wordcount():
+    try:
+        num_words = util.getnumwords()
+        if num_words != False:
+            return str(num_words), 200
+        return "Error in counting number of words in all files", 400
+    except Exception as e:
+        logging.error(e, exc_info=True)

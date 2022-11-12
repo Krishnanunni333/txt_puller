@@ -4,6 +4,8 @@ import subprocess
 import json
 import os
 import logging
+import threading
+import queue
 
 def copyfile(existingfile, newfile):
     print(existingfile, newfile)
@@ -74,5 +76,38 @@ def deletefile(filename):
         return True 
     except Exception as e:
         logging.error(e, exc_info=True)
+
+def getwordusingwc(filename, total_words):
+    try:
+        wcCommand = "wc -w {}".format(filename)
+        process = subprocess.Popen(wcCommand.split(), stdout=subprocess.PIPE)
+        output, error = process.communicate()
+        if error != None:
+            exit(1)
+        words_value = int(output.decode("utf-8").split()[0].strip())
+        total_words.append(words_value)
+    except Exception as e:
+        logging.error(e, exc_info=True)
     
 
+def getnumwords():
+    try:
+        threads = []
+        total_words = []
+        for x in os.listdir("./alltxtfiles/"):
+            if x.endswith(".txt"):
+                thread = threading.Thread(target=getwordusingwc, args=("./alltxtfiles/" + x, total_words))
+
+                threads.append(thread)
+
+        for thread in threads:
+            thread.start()
+
+        for thread in threads:
+            thread.join()
+
+        if len(total_words) > 0:
+            return sum(total_words)
+        return False
+    except Exception as e:
+        logging.error(e, exc_info=True)

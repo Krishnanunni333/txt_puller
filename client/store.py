@@ -36,7 +36,7 @@ def update():
 
 @cli.command("wc")
 def wc():
-    click.echo("wc")
+    controller.count_total_words()
 
 @cli.command("freq-words")
 def freq_words():

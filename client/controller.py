@@ -116,6 +116,17 @@ def remove_file(filename):
     except Exception as e:
         logging.error(e, exc_info=True)
 
+
+def count_total_words():
+    try:
+        total_words_response = requests.get('http://127.0.0.1:5000/wordcount')
+        if total_words_response.status_code != 200:
+            click.secho("Unable to count the number of words in the server", fg="red", bold=True)
+        else:
+            click.secho("Total number of words {}".format(total_words_response.content.decode('utf-8')), fg="yellow", bold=True)
+    except Exception as e:
+        logging.error(e, exc_info=True)
+
         
 
 
