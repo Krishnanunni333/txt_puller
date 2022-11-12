@@ -60,7 +60,7 @@ class File():
         except Exception as e:
             logging.error(e, exc_info=True)
 
-def uploader(file_object, CHECK_SUM_FROM_SERVER):
+def uploader(file_object, CHECK_SUM_FROM_SERVER, update=False):
     try:
         md5_value = file_object.return_md5()
         if md5_value in CHECK_SUM_FROM_SERVER.keys() and CHECK_SUM_FROM_SERVER[md5_value] == file_object.filename:
@@ -69,6 +69,8 @@ def uploader(file_object, CHECK_SUM_FROM_SERVER):
         if md5_value in CHECK_SUM_FROM_SERVER.keys():
             file_object.copy_txt_at_server(CHECK_SUM_FROM_SERVER[md5_value])
         else:
+            if update:
+                remove_file(file_object.filename)
             file_object.send_txt_line_by_line()
         click.secho("Successfully uploaded {} to the server".format(file_object.filename), fg="green", bold=True)
     except Exception as e:
@@ -81,6 +83,7 @@ def push(filenames):
            click.secho("Error getting checksums of all the files in the server" , fg="red", bold=True)
     except Exception as e:
         logging.error(e, exc_info=True)
+        return
 
     CHECK_SUM_FROM_SERVER = checksum_response.json()
     filenames = list(filenames)
@@ -126,6 +129,20 @@ def count_total_words():
             click.secho("Total number of words {}".format(total_words_response.content.decode('utf-8')), fg="yellow", bold=True)
     except Exception as e:
         logging.error(e, exc_info=True)
+
+def update_file(filename):
+    try:
+        checksum_response = requests.get('http://127.0.0.1:5000/getmd5sum')
+        if checksum_response.status_code != 200:
+           click.secho("Error getting checksums of all the files in the server" , fg="red", bold=True)
+           return
+        else:
+            CHECK_SUM_FROM_SERVER = checksum_response.json()
+            file_object = File(filename)
+            uploader(file_object, CHECK_SUM_FROM_SERVER, True)
+    except Exception as e:
+        logging.error(e, exc_info=True)
+        return
 
         
 

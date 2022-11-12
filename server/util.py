@@ -9,7 +9,8 @@ import queue
 
 def copyfile(existingfile, newfile):
     print(existingfile, newfile)
-    dest = shutil.copyfile("./alltxtfiles/" + existingfile, "./alltxtfiles/" + newfile)
+    dest_1 = shutil.copyfile("./alltxtfiles/" + existingfile, "./alltxtfiles/" + newfile)
+    dest_2 = shutil.copyfile("./filemetadata/" + existingfile + ".json", "./filemetadata/" + newfile + ".json")
 
 def return_md5(filename):
         md5Command = "md5sum {}".format(filename)
