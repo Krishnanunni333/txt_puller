@@ -1,5 +1,6 @@
 import click
-import upload
+import controller
+import logging
 
 @click.group()
 def cli():
@@ -8,15 +9,26 @@ def cli():
 @cli.command("add")
 @click.argument('files', type=str, nargs=-1)
 def add(files):
-    upload.push(files)
+    try:
+        controller.push(files)
+    except Exception as e:
+        logging.error(e, exc_info=True)
 
 @cli.command("ls")
 def ls():
-    click.echo("ls")
+    try:
+        click.secho(*controller.listfiles(), fg="green", bold=True)
+    except Exception as e:
+        logging.error(e, exc_info=True)
+    
 
 @cli.command("rm")
-def rm():
-    click.echo("rm")
+@click.argument('filename', type=str)
+def rm(filename):
+    try:
+        controller.remove_file(filename)
+    except Exception as e:
+        logging.error(e, exc_info=True)
 
 @cli.command("update")
 def update():

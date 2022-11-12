@@ -6,6 +6,7 @@ import os
 import logging
 
 def copyfile(existingfile, newfile):
+    print(existingfile, newfile)
     dest = shutil.copyfile("./alltxtfiles/" + existingfile, "./alltxtfiles/" + newfile)
 
 def return_md5(filename):
@@ -24,7 +25,7 @@ def get_md5_files():
         output = return_md5(filename)
         md5_value = output.decode("utf-8").split()[0].strip()
         filename = output.decode("utf-8").split()[1].strip()[2:]
-        all_md5s[md5_value] = filename
+        all_md5s[md5_value] = filename.split('/')[1]
     
     return all_md5s
 
@@ -48,7 +49,7 @@ def process_json_payload(payload):
         with open("filemetadata/{}.json".format(filename), 'w') as metafile:
                 json.dump(dictionary, metafile)
     except Exception as e:
-        logging.error(e.msg, exc_info=True)
+        logging.error(e, exc_info=True)
 
     return True
 
@@ -60,7 +61,18 @@ def getalltxtfiles():
         for x in os.listdir("./alltxtfiles/"):
             if x.endswith(".txt"):
                 alltxtfiles.append(x)
+        return alltxtfiles
     except Exception as e:
-        logging.error(e.msg, exc_info=True)
-    return alltxtfiles
+        logging.error(e, exc_info=True)
+
+def deletefile(filename):
+    try:
+        if filename not in getalltxtfiles():
+            return False
+        os.remove("./alltxtfiles/" + filename)
+        os.remove("./filemetadata/" + filename + ".json")
+        return True 
+    except Exception as e:
+        logging.error(e, exc_info=True)
+    
 
