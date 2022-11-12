@@ -9,19 +9,22 @@ import constant
 
 
 def copyfile(existingfile, newfile):
+    '''Function to copy file within server if the file with same md5 is already present'''
     print(existingfile, newfile)
     dest_1 = shutil.copyfile(constant.TXT_PATH + existingfile, constant.TXT_PATH + newfile)
     dest_2 = shutil.copyfile(constant.META_PATH + existingfile + ".json", constant.META_PATH + newfile + ".json")
 
 def return_md5(filename):
-        md5Command = "md5sum {}".format(filename)
-        process = subprocess.Popen(md5Command.split(), stdout=subprocess.PIPE)
-        output, error = process.communicate()
-        if error != None:
-            exit(1)
-        return output
+    '''Function to return the md5 value of a txt file'''
+    md5Command = "md5sum {}".format(filename)
+    process = subprocess.Popen(md5Command.split(), stdout=subprocess.PIPE)
+    output, error = process.communicate()
+    if error != None:
+        exit(1)
+    return output
 
 def get_md5_files():
+    '''Function to get md5 values of all the txt files'''
     all_md5s = {}
     all_txt_files = glob.glob(constant.TXT_PATH + '*.txt')
 
@@ -70,6 +73,7 @@ def getalltxtfiles():
         logging.error(e, exc_info=True)
 
 def deletefile(filename):
+    '''Function to delete a txt file'''
     try:
         if filename not in getalltxtfiles():
             return False
@@ -80,6 +84,7 @@ def deletefile(filename):
         logging.error(e, exc_info=True)
 
 def getwordusingwc(filename, total_words):
+    '''Function to get total number of words in a single txt file'''
     try:
         wcCommand = "wc -w {}".format(filename)
         process = subprocess.Popen(wcCommand.split(), stdout=subprocess.PIPE)
@@ -93,6 +98,7 @@ def getwordusingwc(filename, total_words):
     
 
 def getnumwords():
+    '''Function to get total number of words in all txt files combined using multithreading'''
     try:
         threads = []
         total_words = []
