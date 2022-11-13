@@ -83,7 +83,10 @@ def freqwords():
         fr_words, error, code = util.getfreqwords(limit, order)
         if error != None:
             return error, code
-        return fr_words, code
+        response_payload = {
+            "freqwords" : fr_words
+        }
+        return response_payload, code
     except Exception as e:
         logging.error(e, exc_info=True)
 

@@ -22,7 +22,7 @@ def ls():
         if error != None:
             view.display_error(error)
         else:
-            view.display_success(content)
+            view.display_files("\n".join(content))
     except Exception as e:
         logging.error(e, exc_info=True)
     
@@ -67,7 +67,7 @@ def freq_words(limit, order):
         if error != None:
             view.display_error(error)
         else:
-            view.display_success(content)
+            view.display_success("\n".join(content))
     except Exception as e:
         logging.error(e)
 

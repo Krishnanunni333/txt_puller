@@ -11,6 +11,7 @@ class File():
         self.filename = filename
 
     def return_md5(self):
+        '''This method returns md5 value of current file'''
         try:
             md5Command = "md5sum {}".format(self.filename)
             process = subprocess.Popen(md5Command.split(), stdout=subprocess.PIPE)
@@ -23,6 +24,7 @@ class File():
         return md5_value     
 
     def send_txt_line_by_line(self):
+        '''This method sends txt data of current file line by line to the server'''
         try:
             count = 0
             with open(self.filename, 'r') as file:
@@ -65,6 +67,7 @@ class File():
              
     
     def copy_txt_at_server(self, existingfile):
+        '''This function copies sends a request to server to copy the file in server and name it as current file'''
         try:
             copy_response = requests.put('{}/copyfile?existingfile={}&newfile={}'.format(constant.URL,existingfile, self.filename))
             content = copy_response.content.decode('utf-8')
@@ -77,6 +80,7 @@ class File():
             logging.error(e, exc_info=True)
 
 def uploader(file_object, CHECK_SUM_FROM_SERVER, update=False):
+    '''The function that handles both update and add commands for a single file'''
     try:
         md5_value = file_object.return_md5()
         if md5_value in CHECK_SUM_FROM_SERVER.keys() and CHECK_SUM_FROM_SERVER[md5_value] == file_object.filename:
@@ -101,6 +105,7 @@ def uploader(file_object, CHECK_SUM_FROM_SERVER, update=False):
         logging.error(e, exc_info=True)
 
 def push(filenames):
+    '''This function uses the uploader function and pushes files using multithreading'''
     try:
         CHECK_SUM_FROM_SERVER = dict()
         checksum_response = requests.get('{}/getmd5sum'.format(constant.URL))
@@ -129,6 +134,7 @@ def push(filenames):
         return None, "Error from client function"
 
 def listfiles():
+    '''Function to get all the files in the server'''
     try:
         list_files_response = requests.get('{}/getalltxtfiles'.format(constant.URL))
         if list_files_response.status_code != 200:
@@ -141,6 +147,7 @@ def listfiles():
         return None, "Error from client function"
 
 def remove_file(filename):
+    '''Function that removes a specific file from the server'''
     try:
         delete_file_response = requests.delete('{}/deletetxtfile?filename={}'.format(constant.URL, filename))
         if delete_file_response.status_code != 200:
@@ -154,6 +161,7 @@ def remove_file(filename):
 
 
 def count_total_words():
+    '''Function that gets total number of words in all the files in the server'''
     try:
         total_words_response = requests.get('{}/wordcount'.format(constant.URL))
         if total_words_response.status_code != 200:
@@ -166,6 +174,7 @@ def count_total_words():
         return None, "Error from client function"
 
 def update_file(filename):
+    '''Function that updates a file in the server'''
     try:
         checksum_response = requests.get('{}/getmd5sum'.format(constant.URL))
         if checksum_response.status_code != 200:
@@ -181,11 +190,12 @@ def update_file(filename):
         return None, "Error from client function"
 
 def freq_words(limit, order):
+    '''Function that gets combined most/least frequesnt words upto a limit from server'''
     try:
         freq_response = requests.get('{}/freqwords?limit={}&order={}'.format(constant.URL, limit, order))
         if freq_response.status_code != 200:
            return None, freq_response.content.decode('utf-8')
-        return freq_response.content.decode('utf-8'), None
+        return freq_response.json()["freqwords"], None
     except requests.exceptions.RequestException as e:   
         return None, "Cannot connect to the server. Please check the connection/ip address URL = {}".format(constant.URL)
     except Exception as e:
