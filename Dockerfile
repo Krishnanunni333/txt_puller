@@ -4,3 +4,4 @@ RUN apt-get install -y git
 RUN git clone https://github.com/Krishnanunni333/txt_puller.git
 WORKDIR /root/txt_puller
 RUN pip install -r requirements.txt
+EXPOSE 5000/tcp
