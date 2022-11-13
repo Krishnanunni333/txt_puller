@@ -36,5 +36,8 @@ def test_update():
     pass
 
 def test_freq_words():
-    pass
+    freq_count_local = create_test_txt.get_freq_words()
+    response =  runner.invoke(freq_words, ["-n", 10, "--order", "asc"])
+    assert response.exit_code == 0
+    assert  "SUCCESS" in response.output and any([True for i in freq_count_local if i not in response.output])
 

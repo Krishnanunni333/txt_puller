@@ -136,6 +136,7 @@ def getnumwords():
 
 
 def wordfreq(filename, wordfreqlist):
+    '''Function that counts the number of words in a single file'''
     try:
         word_freq = dict()
         with open(filename, 'r') as file:
@@ -149,6 +150,7 @@ def wordfreq(filename, wordfreqlist):
         
 
 def getfreqwords(limit, order):
+    '''Function that combines all the multithreaded task to calculate the combined least or most frequent words'''
     try:
         all_files = getalltxtfiles()[0]
         wordfreqlist = list()
@@ -175,7 +177,6 @@ def getfreqwords(limit, order):
             final_freq = sorted(final_freq.items(), key=lambda x: x[1])
         else:
             final_freq = sorted(final_freq.items(), key=lambda x: x[1], reverse=True)
-        print(final_freq)
         return [item[0] for item in final_freq][:int(limit)], None, 200
 
         

@@ -35,4 +35,16 @@ def word_count(files):
 
 def remove_file_in_local(filename):
     os.remove(filename)
+
+def get_freq_words():
+    freCommand = "cat *.txt | tr -s ' ' '\n' | sort | uniq -c | sort -n | tail -n 10"
+    process = subprocess.Popen(freCommand, stdout=subprocess.PIPE, shell=True)
+    output, error = process.communicate()
+    if error != None:
+        exit(1)
+    freq_raw = output.decode('utf-8').strip().replace('\n', '  ').strip().split('  ')
+    freq = {raw.split()[1] : raw.split()[0] for raw in freq_raw if raw != ''}
+
+    return list(freq.keys())
+
     
