@@ -11,12 +11,12 @@ A client-server application used for listing, removing and updating files in a s
 
 #### Features
 
-- add (Add multiple files to the server)
-- ls (List all files in the server)
-- rm (Remove a files in the server)
-- update (Updare a file in the server)
-- wc (Count number of words in all the files in the server)
-- freq-words (Count all most or least n frequent words in all the files combined)
+- add (Add multiple files to the server) accepts multiple values
+- ls (List all files in the server) accepts no value
+- rm (Remove a files in the server)  accepts single value
+- update (Updare a file in the server) accepts single value
+- wc (Count number of words in all the files in the server) accepts no value
+- freq-words (Count all most or least n frequent words in all the files combined) accepts no value
 
 #### Steps to test the whole application inside a container
 
@@ -128,6 +128,8 @@ eg:
 ```sh
 docker build -t krishnanunni333/store-full-app:v0.1 . --no-cache
 ```
-4. **While getting inside container through VScode, please go to root folder. The repo txt_puller will be there**
+#### Notes
+1. **While getting inside container through VScode, please go to root folder. The repo txt_puller will be there**
+2. 
 
 
