@@ -3,7 +3,7 @@ config = configparser.ConfigParser()
 config.read('store.properties')
 
 PROTOCOL = config.get("endpoint", "protocol")
-DOMAIN = config.get("endpoint", "domain")
+HOST = config.get("endpoint", "host")
 PORT = config.get("endpoint", "port")
 
-URL = PROTOCOL + "://" + DOMAIN + ":" + PORT
+URL = PROTOCOL + "://" + HOST + ":" + PORT
