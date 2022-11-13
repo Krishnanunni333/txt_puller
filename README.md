@@ -129,7 +129,6 @@ eg:
 docker build -t krishnanunni333/store-full-app:v0.1 . --no-cache
 ```
 #### Notes
-1. **While getting inside container through VScode, please go to root folder. The repo txt_puller will be there**
-2. 
+1. **While getting inside container through VScode, please go to root folder. The repo txt_puller will be there** 
 
 
