@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify, current_app
 import util
 import logging
+import constant
 
 
 app = Flask(__name__)
@@ -85,3 +86,6 @@ def freqwords():
         return fr_words, code
     except Exception as e:
         logging.error(e, exc_info=True)
+
+if __name__ == "__main__":
+    app.run(host = constant.HOST, port = constant.PORT, debug=True)

@@ -18,7 +18,11 @@ def add(files):
 @cli.command("ls")
 def ls():
     try:
-        click.secho(*controller.listfiles(), fg="green", bold=True)
+        content, error = controller.listfiles()
+        if error != None:
+            view.display_error(error)
+        else:
+            view.display_success(content)
     except Exception as e:
         logging.error(e, exc_info=True)
     
