@@ -16,7 +16,7 @@ def test_add():
 def test_ls():
     response = runner.invoke(ls)
     assert response.exit_code == 0
-    assert  "SUCCESS" in response.output
+    assert  "ALL FILES" in response.output
 
 def test_rm():
     test_txt_files = [i[2:] for i in glob.glob('./*.txt')]
