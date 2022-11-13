@@ -14,33 +14,40 @@ def hello_world():
 def copyfile():
     existingfile = request.args.get("existingfile")
     newfile = request.args.get("newfile")
-    util.copyfile(existingfile, newfile)
-    return "Success", 201
+    success, error, code = util.copyfile(existingfile, newfile)
+    if error != None:
+        return error, code
+    return success, code
 
 
 @app.route('/getmd5sum', methods=['GET'])
 def getmd5sum():
-    md5s = util.get_md5_files()
-    return jsonify(md5s), 200
+    md5s, error, code = util.get_md5_files()
+    if error != None:
+        return error, code
+    return jsonify(md5s), code
 
 
 @app.route('/newfilecreation', methods=['POST'])
 def newfilecreation():
     line_payload = request.get_json()
-    success = util.process_json_payload(line_payload)
-    if success:
-        return "Success", 201
-    return "Failed", 500
+    success, error, code = util.process_json_payload(line_payload)
+    if error != None:
+        return error, code
+    return success, code
 
 
 @app.route('/getalltxtfiles', methods=['GET'])
 def getalltxtfiles():
     try:
-        alltxtfiles = util.getalltxtfiles()
+        alltxtfiles, error, code = util.getalltxtfiles()
+        print(alltxtfiles)
+        if error != None:
+            return error, code
         response_payload = {
             "txtfiles" : alltxtfiles
         }
-        return jsonify(response_payload), 200
+        return jsonify(response_payload), code
     except Exception as e:
         logging.error(e, exc_info=True)
 
@@ -48,10 +55,11 @@ def getalltxtfiles():
 def deletetxtfile():
     file_to_be_deleted = request.args.get("filename")
     try:
-        alltxtfiles = util.deletefile(file_to_be_deleted)
-        if alltxtfiles:
-            return "Success", 200
-        return "No file named {}".format(file_to_be_deleted), 400
+        deleted_file, error, code = util.deletefile(file_to_be_deleted)
+        if error != None:
+            return error, code
+        print(deleted_file)
+        return deleted_file, code
     except Exception as e:
         logging.error(e, exc_info=True)
 
@@ -59,9 +67,21 @@ def deletetxtfile():
 @app.route('/wordcount', methods=['GET'])
 def wordcount():
     try:
-        num_words = util.getnumwords()
-        if num_words != False:
-            return str(num_words), 200
-        return "Error in counting number of words in all files", 400
+        num_words, error, code = util.getnumwords()
+        if error != None:
+            return error, code
+        return num_words, code
+    except Exception as e:
+        logging.error(e, exc_info=True)
+
+@app.route('/freqwords', methods=['GET'])
+def freqwords():
+    try:
+        limit = request.args.get("limit")
+        order = request.args.get("order")
+        fr_words, error, code = util.getfreqwords(limit, order)
+        if error != None:
+            return error, code
+        return fr_words, code
     except Exception as e:
         logging.error(e, exc_info=True)
