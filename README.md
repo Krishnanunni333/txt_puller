@@ -62,7 +62,7 @@ A client-server application used for listing, removing and updating files in a s
    rm index.html 
    ```
 11. Run the automated tests using the following command in the current directory
-   - pytest 
+   - pytest
    
    The automated test will create new txt files with content in it and performs, add, rm, ls, wc commands and checks their output. It only contains some basic cases and the test cases can be made much bigger and broader to cover the whole application working.
    
@@ -119,5 +119,15 @@ In this project  the first approach is used assuming that a single line data wil
 1. Metadata file will contain all the basic details of the files. This file can be used for further developement in future to include thve feature to pause and start download whenever the user wants so that the next time when user tries to repload, the upload starts from the last line that was sent before.
 
 2. Data chunk based approach can also be followed to include more type of files like video files.
+
+3. If you want to build the image locally, just copy the Dockerfile outside the server and client folders and execute the below command
+```sh
+docker build -t <image name>:<tag name> . --no-cache
+```
+eg: 
+```sh
+docker build -t krishnanunni333/store-full-app:v0.1 . --no-cache
+```
+4. **While getting inside container through VScode, please go to root folder. The repo txt_puller will be there**
 
 
