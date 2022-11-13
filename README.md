@@ -62,9 +62,8 @@ A client-server application used for listing, removing and updating files in a s
    rm index.html 
    ```
 11. Run the automated tests using the following command in the current directory
-    ```html
-   pytest 
-   ```
+   - pytest 
+   
    The automated test will create new txt files with content in it and performs, add, rm, ls, wc commands and checks their output. It only contains some basic cases and the test cases can be made much bigger and broader to cover the whole application working.
    
    *The application has all the functionalities as per the document shared but automated test coverage is not there for all the functionalities*
