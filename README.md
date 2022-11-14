@@ -34,7 +34,7 @@ A client-server application used for listing, removing and updating files in a s
    ```
 4. Get inside the running container
    ```sh
-   docker exec -it dreamy_mclaren /bin/bash
+   docker exec -it <container name> /bin/bash
    ```
 5. Run the setup.sh file.
    ```sh
