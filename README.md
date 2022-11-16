@@ -60,7 +60,7 @@ A client-server application used for listing, removing and updating files in a s
    kubectl get svc file-server-service
    ```
 5. Use the hostname/ip and port together for testing and other operations.
-   eg : http://localhost:5000 or http://127.0.0.1:5000 or http:<external-ip>:5000
+   eg : http://localhost:5000 or http://127.0.0.1:5000 or http:< external-ip >:5000
 
 
 
