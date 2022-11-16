@@ -18,6 +18,52 @@ A client-server application used for listing, removing and updating files in a s
 - wc (Count number of words in all the files in the server) accepts no value
 - freq-words (Count all most or least n frequent words in all the files combined) accepts no value
 
+#### Steps to run server as a standalone docker container
+
+1. Clone the repo
+   ```sh
+   git clone https://github.com/Krishnanunni333/txt_puller.git
+   ```
+2. CD into the txt_puller/server directory
+   ```sh
+   cd txt_puller/server
+   ```
+3. Execute the setup_server.sh script
+   ```sh
+   sh setup_server.sh
+   ```
+   *Change permission by executing chmod +xsetup_server.sh if execution error comes up*
+
+4. Now run the created image as a container as below.
+   ```sh
+   docker run -it -d -p 5000:5000 krishnanunni333/store-full-server:v0.1 /bin/bash
+   ```
+   *krishnanunni333/store-full-server:v0.1 is the image name and tag. You can change image name and tag if u want in the setup_server.sh file*
+
+
+#### Steps to run the server inside a Kubernetes cluster as a Pod
+
+1. CD into the txt_puller/server directory
+   ```sh
+   cd txt_puller/server
+   ```
+2. Execute the below command to deploy the pod.
+   ```sh
+   kubectl apply -f server-deploy.yaml
+   ```
+3. Execute the below command to deploy the services.
+   ```sh
+   kubectl apply -f server-service.yaml
+   ```
+4. Execute the below command to get hostname/external-ip and port
+   ```sh
+   kubectl get svc file-server-service
+   ```
+5. Use the hostname/ip and port together for testing and other operations.
+   eg : http://localhost:5000 or http://127.0.0.1:5000 or http:<external-ip>:5000
+
+
+
 #### Steps to test the whole application inside a container
 
 1. Pull the docker image from DockerHub

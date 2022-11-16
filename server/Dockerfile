@@ -1,8 +1,10 @@
 FROM python:3.10
 RUN apt-get update
-RUN apt-get install -y git
-RUN git clone https://github.com/Krishnanunni333/txt_puller.git
-WORKDIR /root/txt_puller
+WORKDIR /txt_puller
+COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
-ENTRYPOINT [ "python" ]
-CMD ["./server/app.py" ]
+COPY . .
+RUN mkdir alltxtfiles
+RUN mkdir filemetadata
+EXPOSE 5000
+CMD python app.py
