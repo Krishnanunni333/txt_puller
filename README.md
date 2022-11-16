@@ -43,6 +43,27 @@ A client-server application used for listing, removing and updating files in a s
 
 #### Steps to run the server inside a Kubernetes cluster as a Pod
 
+1. CD into the txt_puller/server directory
+   ```sh
+   cd txt_puller/server
+   ```
+2. Execute the below command to deploy the pod.
+   ```sh
+   kubectl apply -f server-deploy.yaml
+   ```
+3. Execute the below command to deploy the services.
+   ```sh
+   kubectl apply -f server-service.yaml
+   ```
+4. Execute the below command to get hostname/external-ip and port
+   ```sh
+   kubectl get svc file-server-service
+   ```
+5. Use the hostname/ip and port together for testing and other operations.
+   eg : http://localhost:5000 or http://127.0.0.1:5000 or http:<external-ip>:5000
+
+
+
 #### Steps to test the whole application inside a container
 
 1. Pull the docker image from DockerHub

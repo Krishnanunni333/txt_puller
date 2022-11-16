@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: file-server-service
+spec:
+  ports:
+  - port: 5000
+    protocol: TCP
+    targetPort: 5000
+  selector:
+    app: file-server
+  type: LoadBalancer

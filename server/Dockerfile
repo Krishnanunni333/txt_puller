@@ -6,6 +6,5 @@ RUN pip install -r requirements.txt
 COPY . .
 RUN mkdir alltxtfiles
 RUN mkdir filemetadata
-ENTRYPOINT [ "python" ]
-CMD ["app.py" ]
 EXPOSE 5000
+CMD python app.py

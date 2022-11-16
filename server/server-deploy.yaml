@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: file-server
+spec:
+  selector:
+    matchLabels:
+      app: file-server
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: file-server
+    spec:
+      containers:
+      - name: file-server
+        image: krishnanunni333/store-full-server:v0.1
+        ports:
+          - containerPort: 5000
