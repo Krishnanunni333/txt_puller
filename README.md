@@ -201,6 +201,7 @@ In this project  the first approach is used assuming that a single line data wil
 - Multithreading is implmented in multiple places, including add command to send multiple files, wc command getting word count of all the files, freq-words command getting the most or least frequent words in all the files.
 - If there is an issue with network connection, then we will retry upto 5 times
 - Only try to modify/create/delete files through the CLI app.
+- A linux environment is considered for running client and server applications.
 
 #### Further development
 1. Metadata file will contain all the basic details of the files. This file can be used for further developement in future to include thve feature to pause and start download whenever the user wants so that the next time when user tries to repload, the upload starts from the last line that was sent before.
