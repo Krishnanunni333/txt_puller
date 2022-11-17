@@ -63,6 +63,47 @@ A client-server application used for listing, removing and updating files in a s
    eg : http://localhost:5000 or http://127.0.0.1:5000 or http:< external-ip >:5000
 
 
+#### Steps to create an executable client
+
+To get valid response, Please run the server
+
+1. CD into the txt_puller/client directory
+   ```sh
+   cd txt_puller/client
+   ```
+2. Set the environment variable equal to the location of your properties file.
+   ```sh
+   export PROPERTIES_PATH=$(pwd) # pwd can be replaced with path to the directory containing store.properties file
+   ```
+   Print it to see its value if you want
+   ```sh
+   echo $PROPERTIES_PATH
+   ```
+   If you export like this, then the value will only be available in that particular single terminal session.
+   If you are a linux user, its better to store the value of PROPERTIES_PATH in the " ~/.bashrc " or " /etc/profile " for system wide use.
+
+3. Install Pyinstaller package to package client as a single executable.
+   ```sh
+   pip install pyinstaller
+   ```
+4. Execute the below command to make an executable using pyinstaller
+   ```sh
+   pyinstaller --onefile store.py
+   ```
+5. CD into the dist folder and copy the store app and paste it wherever you want to execute the commands.
+   ```sh
+   cd dist
+   cp store ~ # copying to home for now
+   cd #navigate to home
+   ```
+6. After copying you can delete the all the folders and files that were created when building the binary.
+
+7. You can use the command as below:
+   ```sh
+   ./store ls
+   ```
+   *Please note that the add and update commands needs the files to be present in the same location where the binary is located*
+
 
 #### Steps to test the whole application inside a container
 
@@ -114,7 +155,7 @@ A client-server application used for listing, removing and updating files in a s
    
    *The application has all the functionalities as per the document shared but automated test coverage is not there for all the functionalities*
    
-#### Usage of the cli tool
+#### Usage of the cli tool using python command
 **add**
 This command will upload all the files to the server if the file is not present in the server. If the file is present, that file is ignored. If a file that has same content as the local file but has a different name in the server, then only copying at the server level will take place with localname as the name of new file.
 ```sh
@@ -176,5 +217,6 @@ docker build -t krishnanunni333/store-full-app:v0.1 . --no-cache
 ```
 #### Notes
 1. **While getting inside container through VScode, please go to root folder. The repo txt_puller will be there** 
+2. **If you are facing error related to config from binary, please store the path of store.properties to PROPERTIES_PATH variable**
 
 
