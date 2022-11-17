@@ -15,7 +15,8 @@ def hello_world():
 def copyfile():
     existingfile = request.args.get("existingfile")
     newfile = request.args.get("newfile")
-    success, error, code = util.copyfile(existingfile, newfile)
+    md5 = request.args.get("md5")
+    success, error, code = util.copyfile(existingfile, newfile, md5)
     if error != None:
         return error, code
     return success, code
@@ -42,7 +43,6 @@ def newfilecreation():
 def getalltxtfiles():
     try:
         alltxtfiles, error, code = util.getalltxtfiles()
-        print(alltxtfiles)
         if error != None:
             return error, code
         response_payload = {
@@ -59,7 +59,6 @@ def deletetxtfile():
         deleted_file, error, code = util.deletefile(file_to_be_deleted)
         if error != None:
             return error, code
-        print(deleted_file)
         return deleted_file, code
     except Exception as e:
         logging.error(e, exc_info=True)

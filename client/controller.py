@@ -14,14 +14,16 @@ class File():
         '''This method returns md5 value of current file'''
         try:
             md5Command = "md5sum {}".format(self.filename)
-            process = subprocess.Popen(md5Command.split(), stdout=subprocess.PIPE)
+            process = subprocess.Popen(md5Command.split(), stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
             output, error = process.communicate()
             if error != None:
-                exit(1)
+                return None, error
+            elif output.decode("utf-8").strip() == "":
+                return None, f"No file called {self.filename}"
             md5_value = output.decode("utf-8").split()[0].strip()
+            return md5_value, None
         except Exception as e:
-            logging.error(e, exc_info=True)
-        return md5_value     
+            logging.error(e, exc_info=True)     
 
     def send_txt_line_by_line(self):
         '''This method sends txt data of current file line by line to the server'''
@@ -69,7 +71,7 @@ class File():
     def copy_txt_at_server(self, existingfile):
         '''This function copies sends a request to server to copy the file in server and name it as current file'''
         try:
-            copy_response = requests.put('{}/copyfile?existingfile={}&newfile={}'.format(constant.URL,existingfile, self.filename))
+            copy_response = requests.put('{}/copyfile?existingfile={}&newfile={}&md5={}'.format(constant.URL,existingfile, self.filename, self.return_md5()))
             content = copy_response.content.decode('utf-8')
             if copy_response.status_code != 201:
                 return None, content
@@ -82,13 +84,19 @@ class File():
 def uploader(file_object, CHECK_SUM_FROM_SERVER, update=False):
     '''The function that handles both update and add commands for a single file'''
     try:
-        md5_value = file_object.return_md5()
-        if md5_value in CHECK_SUM_FROM_SERVER.keys() and CHECK_SUM_FROM_SERVER[md5_value] == file_object.filename:
+        md5_value, error = file_object.return_md5()
+        if error:
+            view.display_error(error)
+        elif update == False and file_object.filename in CHECK_SUM_FROM_SERVER.keys():
             view.display_warning("File is already in the server")
-        elif update == False and file_object.filename in CHECK_SUM_FROM_SERVER.values():
+        elif update == True and file_object.filename in CHECK_SUM_FROM_SERVER.keys() and md5_value == CHECK_SUM_FROM_SERVER[file_object.filename]:
             view.display_warning("File is already in the server")
-        elif md5_value in CHECK_SUM_FROM_SERVER.keys():
-            content, error = file_object.copy_txt_at_server(CHECK_SUM_FROM_SERVER[md5_value])
+        elif md5_value in CHECK_SUM_FROM_SERVER.values():
+            copy_filename = ""
+            for filename, md5_ in CHECK_SUM_FROM_SERVER.items():
+                if md5_ == md5_value:
+                    copy_filename = filename
+            content, error = file_object.copy_txt_at_server(copy_filename)
             if error != None:
                 view.display_error(content)
             else:
@@ -139,6 +147,8 @@ def listfiles():
         list_files_response = requests.get('{}/getalltxtfiles'.format(constant.URL))
         if list_files_response.status_code != 200:
             return None, list_files_response.content.decode('utf-8')
+        elif list_files_response.status_code == 200 and len(list_files_response.json()["txtfiles"]) == 0:
+            return None, "No files present!"
         return list_files_response.json()["txtfiles"], None
     except requests.exceptions.RequestException as e:   
         return None, "Cannot connect to the server. Please check the connection/ip address URL = {}".format(constant.URL)

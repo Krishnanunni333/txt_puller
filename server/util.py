@@ -9,11 +9,13 @@ import constant
 import re
 
 
-def copyfile(existingfile, newfile):
+def copyfile(existingfile, newfile, md5):
     '''Function to copy file within server if the file with same md5 is already present'''
     try:
-        dest_1 = shutil.copyfile(constant.TXT_PATH + existingfile, constant.TXT_PATH + newfile)
-        dest_2 = shutil.copyfile(constant.META_PATH + existingfile + ".json", constant.META_PATH + newfile + ".json")
+        if return_md5(existingfile) != md5:
+            return None, "Existing file changed in server"
+        shutil.copyfile(constant.TXT_PATH + existingfile, constant.TXT_PATH + newfile)
+        shutil.copyfile(constant.META_PATH + existingfile + ".json", constant.META_PATH + newfile + ".json")
         return "Successfully copied", None, 201
     except Exception as e:
         logging.error(e, exc_info=True)
@@ -41,7 +43,7 @@ def get_md5_files():
         output = return_md5(filename)
         md5_value = output.decode("utf-8").split()[0].strip()
         filename = output.decode("utf-8").split()[1].strip()[2:]
-        all_md5s[md5_value] = filename.split('/')[1]
+        all_md5s[filename.split('/')[1]] = md5_value
     
     return all_md5s, None, 200
 
