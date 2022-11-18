@@ -1,10 +1,8 @@
 import configparser
 import os
 
-slash = '/'
-if os.name == 'nt':
-    slash = '\\'
-PROPERTIES_PATH = os.getenv('PROPERTIES_PATH') + slash + 'store.properties'
+
+PROPERTIES_PATH = os.getenv('PROPERTIES_PATH') +  '/store.properties'
 print(f"The properties values are fetched from this file: {PROPERTIES_PATH}")
 
 

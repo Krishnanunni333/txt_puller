@@ -84,6 +84,8 @@ class File():
 def uploader(file_object, CHECK_SUM_FROM_SERVER, update=False):
     '''The function that handles both update and add commands for a single file'''
     try:
+        if file_object.filename.endswith(".txt") == False:
+            view.display_error(f"{file_object.filename} is not a txt file")
         md5_value, error = file_object.return_md5()
         if error:
             view.display_error(error)
@@ -117,6 +119,7 @@ def push(filenames):
     try:
         CHECK_SUM_FROM_SERVER = dict()
         checksum_response = requests.get('{}/getmd5sum'.format(constant.URL))
+        
         if "No files present" not in checksum_response.content.decode('utf-8') and checksum_response.status_code == 200:
             CHECK_SUM_FROM_SERVER = checksum_response.json()
         if checksum_response.status_code != 200:
@@ -135,10 +138,11 @@ def push(filenames):
 
         for thread in threads:
             thread.join()
+        return "All files are successfully uploaded", None
     except requests.exceptions.RequestException as e:   
         return None, "Cannot connect to the server. Please check the connection/ip address URL = {}".format(constant.URL)
     except Exception as e:
-        logging.error(e, exc_info=True)
+        logging.error(e)
         return None, "Error from client function"
 
 def listfiles():
@@ -159,6 +163,8 @@ def listfiles():
 def remove_file(filename):
     '''Function that removes a specific file from the server'''
     try:
+        if filename.endswith(".txt") == False:
+            return None, f"{filename} is not a txt file"
         delete_file_response = requests.delete('{}/deletetxtfile?filename={}'.format(constant.URL, filename))
         if delete_file_response.status_code != 200:
             return None, delete_file_response.content.decode('utf-8')
