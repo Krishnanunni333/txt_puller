@@ -11,7 +11,11 @@ def cli():
 @click.argument('files', type=str, nargs=-1)
 def add(files):
     try:
-        controller.push(files)
+        content, error = controller.push(files)
+        if error != None:
+            view.display_error(error)
+        else:
+            view.display_success(content)
     except Exception as e:
         logging.error(e, exc_info=True)
 
@@ -43,7 +47,11 @@ def rm(filename):
 @click.argument('filename', type=str)
 def update(filename):
     try:
-        controller.update_file(filename)
+        content, error = controller.update_file(filename)
+        if error != None:
+            view.display_error(error)
+        else:
+            view.display_files("\n".join(content))
     except Exception as e:
         logging.error(e)
 
